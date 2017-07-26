@@ -1,0 +1,23 @@
+version: '3'
+services:
+  apache:
+    build: ./docker/php
+    volumes:
+      - ./web/:/var/www/html
+      - ./docker/sites-enabled:/etc/apache2/sites-enabled
+    links:
+      - db
+    environment:
+      DB_HOST: db
+  db:
+    image: mysql/mysql-server:latest
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./docker/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_DATABASE: "drupalDB"
+      MYSQL_USER: "drupal"
+      MYSQL_PASSWORD: "drupal"
+      MYSQL_ROOT_PASSWORD: "root"
+volumes:
+  db-data:
